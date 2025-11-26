@@ -29,26 +29,26 @@
             <p>Hoje é {{ data_atual }}</p>
         </section>
 
-<section class="section">
-    <div class="section-header">
-        <h3>Agenda de Hoje</h3>
-        <i class="far fa-calendar-alt"></i>
-    </div>
-    <div class="class-list">
-        {% for aula in aulas_do_dia %}
-        <div class="class-item">
-            <i class="fas fa-circle icon-small"></i>
-            <div class="class-details">
-                <span class="class-time">Horário: {{ aula.hora.strftime("%H:%M") }}</span>
-                <span class="class-name">Tipo de aula: {{ aula.tipo_aula }} - {{ aula.agendamentos|length }}/{{ aula.max_alunos }} alunos</span>
-                <span class="class-studio">Estúdio: {{ aula.estudio.nome }}</span>
+        <section class="section">
+            <div class="section-header">
+                <h3>Agenda de Hoje</h3>
+                <i class="far fa-calendar-alt"></i>
             </div>
-        </div>
-        {% else %}
-        <p>Nenhuma aula cadastrada para hoje.</p>
-        {% endfor %}
-    </div>
-</section>
+            <div class="class-list">
+                {% for aula in aulas_do_dia %}
+                <div class="class-item">
+                    <i class="fas fa-circle icon-small"></i>
+                    <div class="class-details">
+                        <span class="class-time">Horário: {{ aula.hora.strftime("%H:%M") }}</span>
+                        <span class="class-name">Tipo de aula: {{ aula.tipo_aula }} - {{ aula.agendamentos|length }}/{{ aula.max_alunos }} alunos</span>
+                        <span class="class-studio">Estúdio: {{ aula.estudio.nome }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <p>Nenhuma aula cadastrada para hoje.</p>
+                {% endfor %}
+            </div>
+        </section>
 
         <section class="section">
             <div class="section-header">
@@ -72,7 +72,6 @@
             </div>
         </section>
 
-
         <section class="section">
             <h3>Ações Rápidas</h3>
             <div class="quick-actions">
@@ -80,14 +79,17 @@
                     <i class="fas fa-edit"></i>
                     <span>Registrar Evolução</span>
                 </div>
-                <div class="action-card">
+
+                <div class="action-card" onclick="abrirModalPresenca()">
                     <i class="far fa-calendar-check"></i>
                     <span>Marcar Presença</span>
                 </div>
+
                 <div class="action-card">
                     <i class="far fa-calendar-alt"></i>
                     <span>Ver Agenda</span>
                 </div>
+
                 <div class="action-card">
                     <i class="fas fa-history"></i>
                     <span>Histórico</span>
@@ -104,11 +106,13 @@
                         <span class="activity-text">Evolução registrada para <strong>Maria Silva</strong></span>
                         <span class="activity-time">Há 2 horas</span>
                     </li>
+
                     <li>
                         <i class="fas fa-square icon-small"></i>
                         <span class="activity-text">Presença confirmada - <strong>João Santos</strong></span>
                         <span class="activity-time">Ontem, às 16:00</span>
                     </li>
+
                     <li>
                         <i class="fas fa-square icon-small"></i>
                         <span class="activity-text"><strong>Nova aula agendada</strong></span>
@@ -136,7 +140,23 @@
                 <span>Perfil</span>
             </div>
         </nav>
+
+    </div> <!-- FIM DO DASHBOARD -->
+
+    <!-- ========================== -->
+    <!-- MODAL ESTILIZADO           -->
+    <!-- ========================== -->
+    <div id="modalOverlay">
+        <div id="modal">
+            <button class="modal-close" onclick="fecharModal()">&times;</button>
+            <h2 id="modalTitulo"></h2>
+            <div id="modalConteudo"></div>
+            <button id="btnConfirmarPresenca" class="btnSalvar" style="display:none;">
+                Confirmar Presença
+            </button>
+        </div>
     </div>
+
     <script src="{{ url_for('static', path='/JS/professor.js') }}?v={{ time }}"></script>
 </body>
 </html>

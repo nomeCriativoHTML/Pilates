@@ -109,3 +109,64 @@ def excluir_professor(professor_id: int, db: Session = Depends(get_db)):
     Exclui um professor pelo ID.
     """
     return ProfessorController.excluir_professor(db, professor_id)
+
+
+# ================================
+# LISTAR AULAS DO PROFESSOR
+# ================================
+@router.get("/presencas/aulas")
+def listar_aulas_professor(
+    request: Request,
+    db: Session = Depends(get_db),
+    professor=Depends(get_current_professor)
+):
+    aulas = AgendaController.listar_aulas_professor(professor, db)
+
+    return [
+        {
+            "id": a.id,
+            "tipo_aula": a.tipo_aula,
+            "data": a.data.strftime("%d/%m/%Y"),
+            "hora": a.hora.strftime("%H:%M"),
+            "estudio": a.estudio.nome
+        }
+        for a in aulas
+    ]
+
+
+# ================================
+# CARREGAR LISTA DE ALUNOS
+# ================================
+@router.get("/presencas/aula/{aula_id}")
+def carregar_presencas(aula_id: int, db: Session = Depends(get_db)):
+    dados = AgendaController.carregar_presencas(aula_id, db)
+
+    return {
+        "aula": {
+            "id": dados["aula"].id,
+            "tipo_aula": dados["aula"].tipo_aula,
+            "data": dados["aula"].data.strftime("%d/%m/%Y"),
+            "hora": dados["aula"].hora.strftime("%H:%M")
+        },
+        "alunos": [
+            {
+                "agendamento_id": ag.id,
+                "nome": ag.aluno.nome,
+                "presenca": ag.presenca.value
+            }
+            for ag in dados["alunos"]
+        ]
+    }
+
+
+# ================================
+# SALVAR PRESENÇAS
+# ================================
+@router.post("/presencas/salvar")
+async def salvar_presencas(request: Request, db: Session = Depends(get_db)):
+    body = await request.json()
+    aula_id = body["aula_id"]
+    presentes = body["presentes"]
+
+    AgendaController.salvar_presencas(aula_id, presentes, db)
+    return {"status": "ok"}

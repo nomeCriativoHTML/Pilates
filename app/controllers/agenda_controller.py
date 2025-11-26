@@ -6,6 +6,8 @@ from app.models.relacionamentos.agenda import Agenda
 from app.schema.agenda import AgendaCreate, AgendaUpdate
 from app.models.estudio import Estudio
 from app.models.professor import Professor
+from app.models.enums import Presenca
+from app.models.relacionamentos.agendamentos import Agendamento
 
 
 
@@ -176,3 +178,38 @@ class AgendaController:
             aula.dia_semana = dias_semana[aula.data.strftime("%A")]
 
         return proximas_aulas
+
+
+
+    @staticmethod
+    def listar_aulas_professor(professor, db: Session):
+        return db.query(Agenda).filter(
+            Agenda.professor_id == professor.id
+        ).all()
+
+    @staticmethod
+    def carregar_presencas(aula_id: int, db: Session):
+        aula = db.query(Agenda).get(aula_id)
+
+        if not aula:
+            raise HTTPException(status_code=404, detail="Aula não encontrada")
+
+        return {
+            "aula": aula,
+            "alunos": aula.agendamentos
+        }
+
+    @staticmethod
+    def salvar_presencas(aula_id: int, presentes_ids: list[str], db: Session):
+
+        agendamentos = db.query(Agendamento).filter(
+            Agendamento.aula_id == aula_id
+        ).all()
+
+        for ag in agendamentos:
+            if str(ag.id) in presentes_ids:
+                ag.presenca = Presenca.presente
+            else:
+                ag.presenca = Presenca.ausente
+
+        db.commit()
