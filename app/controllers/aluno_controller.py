@@ -81,3 +81,27 @@ class AlunoController:
         db.commit()
         return {"mensagem": f"Aluno {aluno.nome} excluído com sucesso."}
 
+    @staticmethod
+    def criar_aluno_publico(db: Session, dados: AlunoCreate):
+        
+        # Regra de validação – evita duplicados
+        aluno_existente = db.query(Aluno).filter(Aluno.email == dados.email).first()
+        if aluno_existente:
+            raise HTTPException(
+                status_code=400,
+                detail="Este email já está cadastrado."
+            )
+
+        novo_aluno = Aluno(
+            nome=dados.nome,
+            email=dados.email,
+            senha=hash_senha(dados.senha),  # mesma função de hash usada no admin
+            telefone=dados.telefone,
+            ativo=True
+        )
+
+        db.add(novo_aluno)
+        db.commit()
+        db.refresh(novo_aluno)
+
+        return novo_aluno

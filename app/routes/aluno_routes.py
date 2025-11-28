@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, status
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.controllers.aluno_controller import AlunoController
@@ -81,6 +81,47 @@ async def pagina_agenda(request: Request):
     Página de agenda do aluno.
     """
     return templates.TemplateResponse("agenda.html", {"request": request})
+
+
+
+#AQUI O ALUNO SE CADASTRA CASO NÃO TENHA CONTA
+@router.get("/cadastrar", response_class=HTMLResponse)
+async def pagina_cadastro_aluno(request: Request):
+    return templates.TemplateResponse(
+        "cadastro_aluno.html",
+        {"request": request}
+    )
+
+
+
+@router.post("/cadastrar")
+async def cadastrar_aluno_json(request: Request, db: Session = Depends(get_db)):
+    try:
+        data = await request.json()
+
+        aluno_data = AlunoCreate(
+            nome=data.get("nome"),
+            cpf=data.get("cpf"),
+            email=data.get("email"),
+            senha=data.get("senha"),
+            telefone=data.get("telefone"),
+            data_nascimento=data.get("data_nascimento"),
+            status_pagamento="pendente"
+        )
+
+        AlunoController.criar_aluno(db, aluno_data)
+
+        return JSONResponse(
+            {"message": "Cadastro realizado com sucesso!"},
+            status_code=201
+        )
+
+    except Exception as e:
+        return JSONResponse(
+            {"error": str(e)},
+            status_code=400
+        )
+
 
 # =====================================================
 # ENDPOINTS RESTFUL (API)
