@@ -27,7 +27,7 @@ document.getElementById("form-aluno").addEventListener("submit", async function 
     }
 });
 
-console.log("JS carregado!");
+
 
 // --- Máscara de Telefone ---
 function mascaraTelefone(input) {
@@ -106,3 +106,155 @@ togglePassword.addEventListener('click', () => {
 
     togglePassword.classList.toggle('fa-eye-slash');
 });
+
+
+
+// --- CARREGAR PLANOS DINAMICAMENTE ---
+async function carregarPlanos() {
+    try {
+        const response = await fetch("/planos/");
+        if (!response.ok) throw new Error("Erro ao carregar planos.");
+
+        const planos = await response.json();
+        const container = document.getElementById("planosContainer");
+        if (!container) return;
+        container.innerHTML = "";
+
+        planos.forEach(plano => {
+            const card = document.createElement("div");
+            card.className = "plano-card";
+            card.onclick = () => abrirModalPlano(plano.id, "adquirir");
+
+            card.innerHTML = `
+                <h3>${plano.periodo}</h3>
+                <p>Acesso a ${plano.frequencia} aulas por semana</p>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar os planos. Tente novamente.");
+    }
+}
+
+async function abrirModalPlano(planoId, modo = "adquirir") {
+    // Fechar upgrade antes de abrir
+    const modalUpgrade = document.getElementById("modalUpgrade");
+    if (modalUpgrade) modalUpgrade.style.display = "none";
+
+    try {
+        const response = await fetch(`/planos/${planoId}`);
+        if (!response.ok) throw new Error("Plano não encontrado.");
+
+        const plano = await response.json();
+
+        document.getElementById("modalTitulo").innerText = plano.periodo;
+        document.getElementById("modalDescricao").innerText = `Acesso a ${plano.frequencia} aulas por semana`;
+        document.getElementById("modalFrequencia").innerText = plano.frequencia;
+        document.getElementById("modalValorMensal").innerText = plano.valor_mensal.toFixed(2);
+        document.getElementById("modalValorTotal").innerText = plano.valor_total.toFixed(2);
+        document.getElementById("modalCancelamento").innerText = plano.politica_cancelamento;
+
+        const modal = document.getElementById("modalPlano");
+        const btnAdquirir = document.querySelector(".btn-adquirir");
+
+        if (modo === "detalhes") {
+            btnAdquirir.style.display = "none";
+        } else {
+            btnAdquirir.style.display = "block";
+            btnAdquirir.onclick = () => adquirirPlano(planoId);
+        }
+
+        modal.style.display = "flex";
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar o plano.");
+    }
+}
+
+
+function fecharModalPlano() {
+    document.getElementById("modalPlano").style.display = "none";
+}
+
+
+// --- Adquirir ---
+async function adquirirPlano(planoId) {
+    const alunoId = document.body.dataset.alunoId;
+
+    if (!alunoId) {
+        alert("Aluno não identificado. Faça login novamente.");
+        return;
+    }
+
+    try {
+        const response = await fetch("/planos/assinar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                aluno_id: Number(alunoId),
+                plano_id: Number(planoId)
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Plano assinado com sucesso!");
+            window.location.reload();
+        } else {
+            alert("Erro: " + (result.detail || "Tente novamente."));
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao assinar o plano. Tente novamente.");
+    }
+}
+
+// --- Inicializa ---
+document.addEventListener("DOMContentLoaded", () => {
+    carregarPlanos();
+});
+
+async function abrirModalUpgrade() {
+    try {
+        const response = await fetch("/planos");
+        const planos = await response.json();
+
+        const lista = document.getElementById("listaPlanosUpgrade");
+        lista.innerHTML = "";
+
+        planos.forEach(p => {
+            lista.innerHTML += `
+                <div class="plano-upgrade-card">
+                    <h3>${p.periodo}</h3>
+                    <p><strong>Frequência:</strong> ${p.frequencia} aulas/semana</p>
+                    <p><strong>Mês:</strong> R$ ${p.valor_mensal.toFixed(2)}</p>
+                    <button onclick="abrirModalPlano(${p.id})">Ver detalhes</button>
+                </div>
+            `;
+        });
+
+        document.getElementById("modalUpgrade").style.display = "flex";
+
+    } catch (err) {
+        console.error("Erro ao carregar planos:", err);
+        alert("Erro ao carregar planos.");
+    }
+}
+
+function fecharModalUpgrade() {
+    document.getElementById("modalUpgrade").style.display = "none";
+}
+
+window.addEventListener("click", (e) => {
+    if (e.target === document.getElementById("modalUpgrade")) fecharModalUpgrade();
+});
+
+function abrirDetalhesPlano(id) {
+    abrirModalPlano(id, "detalhes");
+}

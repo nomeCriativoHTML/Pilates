@@ -6,6 +6,7 @@ from datetime import datetime
 from app.controllers.login.aluno_login import AlunoLoginController
 from app.schema.login.aluno_login import AlunoLogin
 from fastapi.templating import Jinja2Templates
+from app.models.plano import Plano
 from app.utils.security import get_current_aluno
 
 templates = Jinja2Templates(directory="app/templates")
@@ -81,22 +82,26 @@ def login_aluno_api(dados: AlunoLogin, db: Session = Depends(get_db)):
     """
     return AlunoLoginController.login_aluno(db, dados)
 
-
-#RENDERIZA A PAGINA DE ALUNO APÓS O LOGIN
-
 @router.get("/aluno", response_class=HTMLResponse)
 async def pagina_aluno(
     request: Request,
-    aluno = Depends(get_current_aluno)
+    aluno = Depends(get_current_aluno),
+    db: Session = Depends(get_db)
 ):
     data_formatada = datetime.now().strftime("%d/%m/%Y")
+
+    # Busca se o aluno possui plano
+    plano = db.query(Plano).filter(Plano.id == aluno.plano_id).first()
+
+    possui_plano = plano is not None
 
     return templates.TemplateResponse(
         "aluno.html",
         {
             "request": request,
             "aluno": aluno,
+            "plano": plano,
+            "possui_plano": possui_plano,
             "data_atual": data_formatada
         }
     )
-

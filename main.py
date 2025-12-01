@@ -65,6 +65,10 @@ app.include_router(gestao_router)
 from app.routes.agenda_routes import router as agenda_router
 app.include_router(agenda_router)
 
+from app.routes import plano_routes
+app.include_router(plano_routes.router)
+
+
 # =========================================================
 # NOVAS ROTAS DE RECUPERAÇÃO DE SENHA
 # =========================================================

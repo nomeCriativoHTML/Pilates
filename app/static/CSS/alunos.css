@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #000; 
-    --secondary-color: #f5f5f5;
-    --text-color: #2c2c2c;
-    --light-gray: #fafafa;
+    --primary-color: #1a73e8; /* azul suave */
+    --secondary-color: #f5f6fa; /* off-white */
+    --text-color: #333333;
+    --light-gray: #f9f9f9;
     --border-color: #e0e0e0;
     --icon-gray: #7a7a7a;
-    --active-color: #000;
+    --active-color: #1a73e8;
     --confirmed-green: #28a745;
     --approved-blue: #007bff;
     --warning-yellow: #ffc107;
@@ -20,7 +20,7 @@
 
 body {
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+    background: linear-gradient(180deg, #f9f9f9 0%, #f0f0f5 100%);
     color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
@@ -28,11 +28,11 @@ body {
 
 /* --------- CONTAINER GERAL --------- */
 .dashboard-container {
-    max-width: 1000px; /* mais largo para desktop */
+    max-width: 1000px;
     margin: 30px auto 70px auto;
     background-color: #fff;
     border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: all 0.3s ease;
 }
@@ -77,8 +77,9 @@ body {
     color: var(--icon-gray);
 }
 .greeting h2 {
-    font-size: 1.4em;
+    font-size: 1.5em;
     font-weight: 600;
+    color: var(--text-color);
 }
 
 /* --------- BOTÕES --------- */
@@ -91,7 +92,7 @@ body {
 .btn {
     flex: 1;
     padding: 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 1em;
     font-weight: 600;
     border: none;
@@ -99,7 +100,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .btn i {
@@ -112,7 +113,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: #333;
+    background: #155ab6;
     transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
@@ -136,11 +137,11 @@ body {
     align-items: flex-start;
     background: #fff9e6;
     border: 1px solid #ffe58a;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 20px;
     color: #856404;
     margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(255, 200, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(255, 200, 0, 0.15);
     animation: fadeIn 0.6s ease;
 }
 
@@ -163,8 +164,9 @@ body {
 }
 
 .section-header h3 {
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: 600;
+    color: var(--text-color);
 }
 
 .section-header i {
@@ -174,7 +176,7 @@ body {
 /* --------- AGENDA --------- */
 .schedule-list {
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 15px;
     background: #fff;
 }
@@ -185,7 +187,7 @@ body {
     align-items: center;
     padding: 12px 0;
     border-bottom: 1px solid var(--border-color);
-    transition: background 0.2s ease;
+    transition: background 0.25s ease;
 }
 
 .schedule-item:hover {
@@ -197,9 +199,9 @@ body {
 }
 
 .tag {
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.8em;
+    font-size: 0.85em;
     font-weight: 600;
 }
 
@@ -207,6 +209,7 @@ body {
     background: rgba(40, 167, 69, 0.1);
     color: var(--confirmed-green);
 }
+
 .tag-approved {
     background: rgba(0, 123, 255, 0.1);
     color: var(--approved-blue);
@@ -215,14 +218,14 @@ body {
 /* --------- AULAS DO MÊS --------- */
 .month-stats {
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 20px;
     background: #fff;
 }
 
 .progress-bar-container {
     background: var(--light-gray);
-    height: 8px;
+    height: 10px;
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 20px;
@@ -237,13 +240,281 @@ body {
 /* --------- PRÓXIMO PAGAMENTO --------- */
 .payment-card {
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 20px;
     background: #fff;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .payment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* PLANOS */
+.planos-container {
+    display: flex;
+    flex-wrap: wrap;           
+    justify-content: center;    
+    gap: 25px 30px;             /* vertical 25px, horizontal 30px */
+    margin-top: 30px;
+    margin-bottom: 70px;
+}
+
+.plano-card {
+    background: linear-gradient(145deg, #ffffff, #f8f9fc);
+    padding: 25px 20px;
+    border-radius: 16px;
+    width: 220px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.plano-card h3 {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.plano-card p {
+    font-size: 0.95em;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+/* Botão interno opcional */
+.plano-card .btn-card {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.plano-card .btn-card:hover {
+    background: #155ab6;
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Hover geral do card */
+.plano-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    background: #f0f4ff;
+}
+
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px); /* deixa o fundo com leve desfoque */
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 450px;
+    max-width: 95%;
+    padding: 30px 25px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: fadeIn 0.4s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: "Poppins", sans-serif;
+}
+
+.modal-content h2 {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-size: 0.95em;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.modal-content p strong {
+    color: var(--primary-color);
+}
+
+.fechar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--icon-gray);
+    transition: all 0.2s ease;
+}
+
+.fechar:hover {
+    color: var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* Botão de adquirir plano */
+.btn-adquirir {
+    margin-top: 15px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 12px;
+    background: var(--primary-color);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-adquirir:hover {
+    background: #155ab6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.meu-plano-section {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+}
+
+.plano-card {
+    width: 95%;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;     /* Conteúdo em coluna */
+    gap: 15px;
+}
+
+/* Título centralizado */
+.plano-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.plano-header i {
+    color: #28a745;
+    font-size: 26px;
+}
+
+/* Informações alinhadas à esquerda */
+.plano-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;     /* Tudo alinhado à esquerda */
+    gap: 4px;
+}
+
+.plano-info p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Área dos botões */
+.plano-acoes {
+    display: flex;
+    justify-content: space-between;   /* Um botão à esquerda e outro à direita */
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Estilo geral dos botões */
+.plano-acoes button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 160px;
+}
+
+.btn-detalhes {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-upgrade {
+    background-color: #27ae60;
+    color: white;
+}
+
+/* BLOQUEIO */
+.locked {
+    position: relative;
+    filter: blur(4px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+.locked::after {
+    content: "\f023";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: #ff0000;
+}
+
+
+
+.plano-upgrade-card {
+    padding: 15px;
+    border-radius: 10px;
+    background: #f3f3f3;
+    margin-bottom: 10px;
+}
+
+
+/* Responsividade */
+@media (max-width: 500px) {
+    .modal-content {
+        width: 100%;
+        padding: 20px;
+        border-radius: 14px;
+    }
+    .modal-content h2 {
+        font-size: 1.4em;
+    }
+    .btn-adquirir {
+        font-size: 0.95em;
+    }
 }
 
 /* --------- BOTTOM NAV --------- */
@@ -258,13 +529,13 @@ body {
     align-items: center;
     height: 65px;
     border-top: 1px solid var(--border-color);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .nav-item {
     text-align: center;
     color: var(--icon-gray);
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .nav-item:hover {
@@ -276,12 +547,13 @@ body {
     color: var(--active-color);
 }
 
+/* ANIMAÇÕES */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --------- RESPONSIVIDADE --------- */
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
     .dashboard-container {
         border-radius: 0;

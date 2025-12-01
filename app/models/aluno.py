@@ -23,6 +23,9 @@ class Aluno(Base):
     )
 
     # Relacionamentos
+    plano_id = Column(Integer, ForeignKey("planos.id"), nullable=True)
+
+    plano = relationship("Plano")
     evolucoes = relationship("MinhaEvolucao", back_populates="aluno", cascade="all, delete-orphan")
     pagamentos = relationship("MeusPagamentos", back_populates="aluno", cascade="all, delete-orphan")
     agendamentos = relationship("Agendamento", back_populates="aluno")
