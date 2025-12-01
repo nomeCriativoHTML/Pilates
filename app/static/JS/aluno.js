@@ -258,3 +258,74 @@ window.addEventListener("click", (e) => {
 function abrirDetalhesPlano(id) {
     abrirModalPlano(id, "detalhes");
 }
+
+// ================================
+// ABRIR MODAL DE DETALHES DA AULA
+// ================================
+function abrirModalAula(aulaId) {
+    fetch(`/login/aluno/aula/${aulaId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erro ao buscar detalhes da aula");
+            }
+            return response.json();
+        })
+        .then(aula => {
+            // Título do modal
+            document.getElementById("modalAulaTitulo").textContent =
+                `Aula de ${aula.tipo_aula} com ${aula.professor}`;
+
+            // Conteúdo do modal
+            document.getElementById("modalAulaConteudo").innerHTML = `
+                <p><strong>Data:</strong> ${aula.data}</p>
+                <p><strong>Hora:</strong> ${aula.hora}</p>
+                <p><strong>Professor:</strong> ${aula.professor}</p>
+                <p><strong>Estúdio:</strong> ${aula.estudio}</p>
+                <p><strong>Tipo da Aula:</strong> ${aula.tipo_aula}</p>
+                <p><strong>Vagas Restantes:</strong> ${aula.vagas_restantes}</p>
+            `;
+
+            // Configura o botão de confirmar presença
+            const btn = document.getElementById("btnConfirmarPresenca");
+            btn.onclick = function () {
+                confirmarPresenca(aulaId);
+            };
+
+            // Exibe o modal
+            document.getElementById("modalAula").style.display = "flex";
+        })
+        .catch(err => {
+            alert("Erro: " + err.message);
+        });
+}
+
+// ================================
+// FECHAR MODAL
+// ================================
+function fecharModalAula() {
+    document.getElementById("modalAula").style.display = "none";
+}
+// ================================
+// CONFIRMAR PRESENÇA
+// ================================
+function confirmarPresenca(aulaId) {
+    fetch(`/login/aluno/aula/confirmar/${aulaId}`, {  // <<--- endpoint correto
+        method: "POST"
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            alert(data.message || "Inscrição confirmada com sucesso!");
+            fecharModalAula();
+
+            // Atualiza a página para refletir alterações
+            window.location.reload();
+        })
+        .catch(err => {
+            alert("Erro ao confirmar presença: " + err.message);
+        });
+}

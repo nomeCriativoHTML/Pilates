@@ -53,30 +53,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================
     // 2. Carregar alunos dentro do mesmo modal
     // ==========================================
-    window.carregarAlunos = function (aula_id) {
+window.carregarAlunos = function (aula_id) {
 
-        aulaSelecionada = aula_id;
+    aulaSelecionada = aula_id;
 
-        fetch(`/professores/presencas/aula/${aula_id}`)
-            .then(res => res.json())
-            .then(data => {
+    fetch(`/professores/presencas/aula/${aula_id}`)
+        .then(res => res.json())
+        .then(data => {
 
-                let html = "";
+            let html = "";
 
+            if (data.alunos.length === 0) {
+                html = "<p>Nenhum aluno inscrito nesta aula.</p>";
+            } else {
                 data.alunos.forEach(item => {
                     html += `
                         <div class="aluno-item">
                             <label>
-                                <input type="checkbox" class="presenca-checkbox" value="${item.agendamento_id}" ${item.presenca ? "checked" : ""}>
+                                <input type="checkbox" class="presenca-checkbox" value="${item.agendamento_id}" ${item.presenca === "presente" ? "checked" : ""}>
                                 ${item.nome}
                             </label>
                         </div>
                     `;
                 });
+            }
 
-                abrirModal("Lista de Presença", html, true);
-            });
-    };
+            abrirModal("Lista de Presença", html, true);
+        });
+};
+
 
     // ====================================================
     // 3. Botão de salvar presença
